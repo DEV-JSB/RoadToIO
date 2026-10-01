@@ -1,0 +1,49 @@
+# ============================================
+# RoadToIO - Unreal Engine
+# ============================================
+
+# Unreal generated directories
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# Visual Studio / Rider generated files
+.vs/
+.idea/
+.vscode/
+
+# Visual Studio user files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
+*.sln.iml
+
+# Build / debug artifacts
+*.pdb
+*.obj
+*.dll
+*.exe
+*.log
+
+# Unreal temporary files
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Unreal autosaves / backups
+**/Saved/Autosaves/
+**/Saved/Backup/
+
+# Local build folders
+Build/Receipts/
+
+# Crash reports
+crashinfo--*
