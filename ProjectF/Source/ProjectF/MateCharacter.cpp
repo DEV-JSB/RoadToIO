@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "SNegativeActionButton.h"
+#include "TimerManager.h"
 
 // Sets default values
 AMateCharacter::AMateCharacter()
@@ -18,10 +19,40 @@ AMateCharacter::AMateCharacter()
 
 void AMateCharacter::Dash()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Dash trigger"));
+	if (bIsDashing)
+	{
+		return;
+	}
+	
+	bIsDashing = true;
 	FVector ForwardDirection = GetActorForwardVector();
 	LaunchCharacter(ForwardDirection * DashSpeed, true, true);
+	if (DashMontage)
+	{
+		PlayAnimMontage(DashMontage);
+	}
 	
+	GetWorldTimerManager().SetTimer(DashTimerHandle, this, &AMateCharacter::EndDash, DashDuration, false);
+}
+
+void AMateCharacter::EndDash()
+{
+	bIsDashing = false;
+	StopAnimMontage(DashMontage);
+}
+
+void AMateCharacter::FollowLeader(float DeltaTime)
+{
+	FVector location = Leader->GetActorLocation();
+	FVector targetPosition = location + LeaderFollowOffset;
+
+	FVector MyPosition = GetActorLocation();
+	FVector MoveDirection = targetPosition - MyPosition;
+	MoveDirection = MoveDirection.GetSafeNormal();
+
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *GetName());
+	//SetActorLocation(MyPosition + MoveDirection * FollowSpeed * DeltaTime);
+	AddMovementInput(MoveDirection);
 }
 
 // Called when the game starts or when spawned
@@ -39,15 +70,7 @@ void AMateCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector location = Leader->GetActorLocation();
-	FVector targetPosition = location + LeaderFollowOffset;
-
-	FVector MyPosition = GetActorLocation();
-	FVector MoveDirection = targetPosition - MyPosition;
-	MoveDirection = MoveDirection.GetSafeNormal();
-
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *GetName());
-	SetActorLocation(MyPosition + MoveDirection * FollowSpeed * DeltaTime);
+	FollowLeader(DeltaTime);
 }
 
 

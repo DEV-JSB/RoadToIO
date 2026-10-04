@@ -8,6 +8,7 @@
 
 
 class UInputAction;
+class UAnimMontage;
 
 UCLASS()
 class PROJECTF_API AMateCharacter : public ACharacter
@@ -19,20 +20,33 @@ public:
 	AMateCharacter();
 
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsDashing;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float FollowSpeed;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float DashSpeed;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float DashDuration;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	UInputAction* DashAction;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAnimMontage* DashMontage;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FVector LeaderFollowOffset;
+	
+	FTimerHandle DashTimerHandle;
+	
 private:
 	ACharacter* Leader;
+
 private:
 	void Dash();
+	void EndDash();
+	void FollowLeader(float DeltaTime);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
