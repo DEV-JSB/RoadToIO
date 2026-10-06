@@ -22,7 +22,17 @@ public:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsDashing;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsSprinting;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UCharacterMovementComponent* MovementComponent;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float SprintSpeed;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float WalkSpeed;
+	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float FollowSpeed;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -46,7 +56,9 @@ private:
 private:
 	void Dash();
 	void EndDash();
+	void StopSprint();
 	void FollowLeader(float DeltaTime);
+	void SetMovementMaxWalkSpeed(float MoveSpeed);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

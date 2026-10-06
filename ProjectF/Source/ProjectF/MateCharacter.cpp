@@ -7,8 +7,8 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
-#include "SNegativeActionButton.h"
 #include "TimerManager.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AMateCharacter::AMateCharacter()
@@ -25,20 +25,29 @@ void AMateCharacter::Dash()
 	}
 	
 	bIsDashing = true;
+	bIsSprinting = true;
+	
 	FVector ForwardDirection = GetActorForwardVector();
 	LaunchCharacter(ForwardDirection * DashSpeed, true, true);
 	if (DashMontage)
 	{
 		PlayAnimMontage(DashMontage);
 	}
-	
 	GetWorldTimerManager().SetTimer(DashTimerHandle, this, &AMateCharacter::EndDash, DashDuration, false);
 }
 
 void AMateCharacter::EndDash()
-{
+{	
 	bIsDashing = false;
+	SetMovementMaxWalkSpeed(bIsSprinting ? SprintSpeed : WalkSpeed);
 	StopAnimMontage(DashMontage);
+}
+
+void AMateCharacter::StopSprint()
+{
+	bIsSprinting = false;
+	UE_LOG(LogTemp, Warning, TEXT("%s StopSprint"), *GetName());
+	SetMovementMaxWalkSpeed(WalkSpeed);
 }
 
 void AMateCharacter::FollowLeader(float DeltaTime)
@@ -55,11 +64,17 @@ void AMateCharacter::FollowLeader(float DeltaTime)
 	AddMovementInput(MoveDirection);
 }
 
+void AMateCharacter::SetMovementMaxWalkSpeed(float MoveSpeed)
+{
+	MovementComponent->MaxWalkSpeed = MoveSpeed;
+}
+
 // Called when the game starts or when spawned
 void AMateCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	MovementComponent = GetCharacterMovement();
 	Leader = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	UE_LOG(LogTemp, Warning, TEXT("%s BeginPlay / Leader : %s"), *GetName(),
 	       Leader ? *Leader->GetName() : TEXT("NULL"));
@@ -84,4 +99,10 @@ void AMateCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	{
 		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Started, this, &AMateCharacter::Dash);
 	}
+	
+	if (EnhancedInputComponent)
+	{
+		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Completed, this, &AMateCharacter::StopSprint);
+	}
+	
 }
