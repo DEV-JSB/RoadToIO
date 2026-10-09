@@ -52,6 +52,10 @@ void AMateCharacter::StopSprint()
 
 void AMateCharacter::FollowLeader(float DeltaTime)
 {
+	if (IsFollowLeader == false)
+	{
+		return;
+	}
 	FVector location = Leader->GetActorLocation();
 	FVector targetPosition = location + LeaderFollowOffset;
 
@@ -59,8 +63,6 @@ void AMateCharacter::FollowLeader(float DeltaTime)
 	FVector MoveDirection = targetPosition - MyPosition;
 	MoveDirection = MoveDirection.GetSafeNormal();
 
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), *GetName());
-	//SetActorLocation(MyPosition + MoveDirection * FollowSpeed * DeltaTime);
 	AddMovementInput(MoveDirection);
 }
 

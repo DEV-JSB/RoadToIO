@@ -32,6 +32,8 @@ public:
 	float SprintSpeed;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float WalkSpeed;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool IsFollowLeader;
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float FollowSpeed;
