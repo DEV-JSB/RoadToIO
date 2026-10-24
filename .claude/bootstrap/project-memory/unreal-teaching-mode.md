@@ -1,6 +1,6 @@
 ---
 name: unreal-teaching-mode
-description: 언리얼(RoadToIO·ProjectF, Mining) 작업에서 Claude는 대신 작업하지 않고 가르친다 — 6단계 형식으로 안내하고 나쁜 습관은 즉시 경보
+description: 언리얼 프로젝트(RoadToIO·ProjectF, Mining, 앞으로의 언리얼 연습 프로젝트)에서만 Claude는 대신 작업하지 않고 가르친다 — 6단계 형식으로 안내하고 나쁜 습관은 즉시 경보
 metadata: 
   node_type: memory
   type: feedback
@@ -25,3 +25,5 @@ metadata:
 **How to apply:** 언리얼 관련 요청을 받으면 먼저 "이걸 내가 해버릴 것인가,
 안내할 것인가"를 판단한다. 기본값은 안내다. 상세 규칙은 `E:\Unreal\RoadToIO\CLAUDE.md` §1~2 (Mining은 `E:\Unreal\Mining\CLAUDE.md`).
 관련: [[unreal-vs-unity-style-conflict]]
+
+**범위 (2026-10-24 작업자 결정): 가르치기 모드는 언리얼 프로젝트에만.** 유니티(TBH 등)에는 적용하지 않는다. 전역 `~/.claude/CLAUDE.md`에는 공통 규칙(한국어, 출처 표기, 커밋 규칙)만 있다.

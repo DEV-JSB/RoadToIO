@@ -168,5 +168,7 @@ A/B/C 같은 글자 등급으로 줄이지 않는다. **확신이 없으면 "확
 1. UE **5.4** + Visual Studio 2022("C++를 사용한 게임 개발") 설치
 2. `ProjectF/ProjectF.uproject` 우클릭 → Generate Visual Studio project files → Development Editor / Win64 빌드
 3. 이 폴더에서 `claude` 실행 → 이 파일이 로드됨
-4. 프로젝트 메모리 복원: `.claude/bootstrap/project-memory/*.md` →
+4. 전역 규칙 복원: `.claude/bootstrap/user-CLAUDE.md` → `C:\Users\<사용자명>\.claude\CLAUDE.md` 로 복사
+   (모든 프로젝트 공통: 한국어, 출처 표기, 게임 레포 커밋은 작업자만, study-notes는 Claude 담당. 가르치기 모드는 이 파일 §1에만 있음)
+5. 프로젝트 메모리 복원: `.claude/bootstrap/project-memory/*.md` →
    `C:\Users\<사용자명>\.claude\projects\E--Unreal-RoadToIO\memory\` 로 복사
