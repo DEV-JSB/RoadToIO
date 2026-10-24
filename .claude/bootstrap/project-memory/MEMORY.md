@@ -14,4 +14,4 @@
 ## 주의
 - [Niagara CPU HLSL은 if 안 벡터 대입 불가](niagara-cpu-vm-hlsl-branch-limit.md) — step/max/lerp로
 - [Unity 코딩 규칙을 언리얼에 쓰면 안 됨](unreal-vs-unity-style-conflict.md) — PascalCase, bIs, 접두사, IsValid, TEXT
-- [연습 프로젝트(내적·외적·회전) 따로 판다](math-practice-project.md) — UE5.4 C++ + DrawDebug, 연습 4개 순서 확정, 위치·레포 미정
+- [GameMathLab = 게임 수학 상설 연습장](math-practice-project.md) — 범위 한정 없음. 첫 과정은 내적·외적·회전 연습 4개(기준: PaperAero 한 장 지도)
