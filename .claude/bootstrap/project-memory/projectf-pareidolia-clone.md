@@ -62,6 +62,11 @@ devlog 2026-10-22-ProjectF.md 작성(세션은 10-23 새벽까지). 사용자는
 **범위 결정(사용자): "바닥은 신경 쓰지 말자, 우리는 종이를 구현하는 거다"** → 2-5(바닥 하강 BP)는 범위 밖. 종이 쪽만 진행.
 Particle State kill은 1단계에서 꺼 둠 → Spreadsheet의 Lifetime 5는 종이를 지우지 않음(10-24에 잘못 경고했음).
 "닿기 전에 서서히 눕기"(PARTICLES Height + SettleHeight lerp) 코드는 안내만 하고 미적용.
+2026-10-29: 코드 작업 없음. 지도 ③ 복습(torque = 내적 부호로 꼬챙이 앞뒤 결정, "N·V 평면에 수직으로 꽂고 앞뒤는 내적" — 작업자 문장) + 거속시·소수 나눗셈 복습.
+4-1 설계(작업자가 쪼갬): 발 위치 = `GetMesh()->GetSocketLocation("foot_l")`(뼈 이름은 스켈레톤에서 확인 필요), 발 속도 = (지금−이전)/DeltaTime(BeginPlay에서 이전 위치 초기화, DeltaTime>0 확인),
+BP가 USER FootPos/FootVel로 NS에 넘김, 종이는 `length(FootPos - Pos)` vs INPUT FootRadius → `step`으로 inside 0/1, 닿으면 **속도를 줌**(작업자 제안).
+함정 공유함: 옆으로만 주면 PaperSim `OutVel *= airborne`가 바로 0으로 만듦 → 위쪽 성분 필요, 떠오르면 기존 torque로 저절로 뒤집힐 수 있음. 바닥(Landed=1)에선 settle이 각속도를 덮어씀.
+남은 결정: 속도 방향 (1 FootVel / 2 FootVel+위 / 3 Pos−FootPos). 4-1b(닿은 위치로 r×F 회전)는 필요할 때만.
 화면 태그 이름(INPUT 등)으로 말할 것 — 내부 이름(Module.)으로 말했다가 지적받음. 3단계 전에 내적/외적을 그림으로 따로 설명하기로 약속함.
 
 **Why:** 다음 세션에서 같은 영상을 다시 분석하거나 바닥 하강을 "국소 함몰"로 잘못 해석하지 않기 위해.

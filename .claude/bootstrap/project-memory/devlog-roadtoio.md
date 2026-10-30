@@ -13,4 +13,5 @@ RoadToIO 레포에는 일지를 두지 않는다 (`docs/` 만들지 않음).
 **study-notes는 Claude가 생성·커밋·푸시까지 한다** (`timeout 90 git push`). 게임 레포(RoadToIO 등) 커밋은 여전히 작업자.
 
 **Why:** 2026-10-24 작업자: "devlog는 하루 일지를 쓰려고 한다. 기능 하나하나 쓰는 게 아니라" / "docs devlog는 study-notes 레포에 정리해 줘. study-notes는 너한테 본격적으로 생성 및 커밋을 맡길 거다. 내가 HTML을 할 것도 아니잖아".
+**티키타카가 길어진 개념(2026-10-29 작업자):** 기초 수학 복습처럼 오래 주고받은 건 study-notes 노트로 정리하고, 일지의 티키타카에는 질문 한두 줄 + 깨달은 문장 + 노트 링크만. "devlog에 너무 많이 쓰면 너저분해질 것 같다".
 **How to apply:** 날짜는 `date +%Y-%m-%d`. 외적 노트 초안은 `E:\Unreal\Mining\docs\devlog\2026-10-22-ProjectF-CrossProduct.*` 에 보관 중(회전 회고 후 study-notes에 올림). [[study-notes-repo]] [[projectf-pareidolia-clone]]
