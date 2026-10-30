@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: f45121fa-5c36-4f97-973e-e95c6e767d32
-  modified: 2026-10-24T11:05:56.037Z
+  modified: 2026-10-30T15:52:33.527Z
 ---
 
 사용자는 Mining과 별개로 `E:\Unreal\RoadToIO\ProjectF` (UE 5.4, C++ 모듈 ProjectF) 에서
@@ -66,7 +66,11 @@ Particle State kill은 1단계에서 꺼 둠 → Spreadsheet의 Lifetime 5는 �
 4-1 설계(작업자가 쪼갬): 발 위치 = `GetMesh()->GetSocketLocation("foot_l")`(뼈 이름은 스켈레톤에서 확인 필요), 발 속도 = (지금−이전)/DeltaTime(BeginPlay에서 이전 위치 초기화, DeltaTime>0 확인),
 BP가 USER FootPos/FootVel로 NS에 넘김, 종이는 `length(FootPos - Pos)` vs INPUT FootRadius → `step`으로 inside 0/1, 닿으면 **속도를 줌**(작업자 제안).
 함정 공유함: 옆으로만 주면 PaperSim `OutVel *= airborne`가 바로 0으로 만듦 → 위쪽 성분 필요, 떠오르면 기존 torque로 저절로 뒤집힐 수 있음. 바닥(Landed=1)에선 settle이 각속도를 덮어씀.
-남은 결정: 속도 방향 (1 FootVel / 2 FootVel+위 / 3 Pos−FootPos). 4-1b(닿은 위치로 r×F 회전)는 필요할 때만.
+2026-10-30~31: **4-1a 완료.** C++ `UPaperToucherComponent`(Source/ProjectF, BoneName·TouchRadius·bDrawDebug, PartPos/PartVel, DoesSocketExist 검사)를 BP_MateCharacter에 붙임(같은 클래스 3명).
+`BP_PaperField`(Content/PaperFX, Niagara 컴포넌트)가 레벨의 NS 액터를 대체, BeginPlay에 Get Player Character→Toucher, Tick에 Set Niagara Variable(Position/Vector3)로 USER FootPos/FootVel.
+NS: 새 스크래치 `PaperInfluence`(Particle Update 맨 위) — INPUT FootPos/FootVel은 스택에서 User에 Link, FootRadius 20(디버그 구는 15로 둠), PushStrength 0.5, LiftStrength 0.6 (10-31 개명: KickStrength·LiftRatio → 짝 맞춤), WakeSpeed 100. 속도 방향 ② FootVel+위쪽(|FootVel| 비례), lerp로 "바꾸기", PARTICLES Touched 출력. 떠올라 3단계 torque로 잘 뒤집힘.
+배운 함정: PIE 중 Details 패널은 실시간 갱신 안 됨(다시 선택하면 갱신). Rider 2026.2가 번들 MSBuild로 v180을 찾음 → VS2022 MSBuild로 지정.
+작업자는 PaperInfluence HLSL을 아직 다 이해 못 함(10-31). 다음: 커밋 2개 확인 → 4-1b(3명×발2 = 6개, 모듈 6번 쌓고 USER Link 방식 유력). 4-1b 쪼개기는 작업자가 먼저.
 화면 태그 이름(INPUT 등)으로 말할 것 — 내부 이름(Module.)으로 말했다가 지적받음. 3단계 전에 내적/외적을 그림으로 따로 설명하기로 약속함.
 
 **Why:** 다음 세션에서 같은 영상을 다시 분석하거나 바닥 하강을 "국소 함몰"로 잘못 해석하지 않기 위해.
