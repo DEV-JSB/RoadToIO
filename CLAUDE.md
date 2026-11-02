@@ -110,7 +110,7 @@ A/B/C 같은 글자 등급으로 줄이지 않는다. **확신이 없으면 "확
 | 경로 | `ProjectF/` (UE **5.4**, C++ 모듈 `ProjectF`) |
 | 목표 | 게임 '파레이돌리아' 모작 — 지금은 **종이 연출**을 Niagara로 재작업 중 |
 | 범위 | **종이 자체**만 (눕기 / 펄럭 낙하 / 다시 눕기 / 몸 반응). 바닥 하강 연출은 범위 밖 (2026-10-24 결정) |
-| 에셋 | `Content/PaperFX/` — `SM_Paper`, `M_Paper`, `NS_PaperField` |
+| 에셋 | `Content/PaperFX/` — 실제 사용: `SM_Paper1`(29×21, 4×6 분할), `M_Paper1`(Two Sided, WPO 휨), `NS_PaperField`. `SM_Paper`·`M_Paper`는 NS에서 안 씀 (2026-11-02 확인) |
 | 맵 | `ThirdPersonMap` 에서 작업 |
 
 **NS_PaperField / PaperEmitter (CPU sim, Local Space 끔)**
@@ -120,10 +120,12 @@ A/B/C 같은 글자 등급으로 줄이지 않는다. **확신이 없으면 "확
 | Particle Spawn | `PaperSpawnInit` | 랜덤 yaw·TiltDeg → `MeshOrientation`, `FloorLift`(Z-파이팅 방지 높이), `Velocity`·`AngVel`=0, `Landed`=0 |
 | Particle Update | `PaperAero` (위) | 쿼터니언→법선 N, 판 공기저항(vn/vt 분리), 펄럭임(torque=dot·cross), 착지 시 눕기(cross(N,flatN)·SettleSpeed), 쿼터니언 누적 |
 | Particle Update | `PaperSim` (아래) | 중력→속도→위치, **발밑 트레이스**(Perform Collision Query Sync CPU, 채널 `PaperFloor`)로 바닥 높이, 착지·`Landed` |
+| Particle Spawn / Update | Set `PaperBend` / Dynamic Material Parameters (맨 아래) | 종이마다 랜덤 휨 −1~1 → `Param1 = PaperBend * (1 - Landed)` → M_Paper1 WPO(UV 긴 쪽 c², × BendDepth 3cm × VertexNormalWS). 공중만 휨 (2026-11-02) |
 
 **진행**: 0 준비 → 1 깔기 → 2 낙하·착지 → 3 공기저항·펄럭·눕기·바닥 감지 (완료) → **4 부위별 몸 반응 (다음)** → 5 다듬기.
 4단계 설계: 부위별 작은 구(발L/R·골반·가슴·머리) × 그 부위의 속도. 서 있으면 반응 없음, 휘두르는 발이 지나간 종이만 섬, 바닥 종이는 밀기보다 뒤집기.
 남은 숙제: 평평하게 떨어지는 종이는 안 펄럭임(4단계 회전으로 해결 예정), "닿기 전에 서서히 눕기"(코드 안내만 함).
+디테일 후보 (확정 아님 · 디테일을 챙길 때 구현): 몸 관통 방지(부위 구로 밀어내기 — 영상에선 통과 안 함), ~~판 휘어짐~~ → 최소판 완료(11-02, 위 표).
 
 **Niagara CPU HLSL 함정**: `if` 안에서 벡터 대입 → Vector VM 컴파일 실패(`branch_flatten`, `has no valid offset`).
 처음부터 `step` / `max` / `lerp` / `clamp` 로 분기 없이 쓴다. 오른쪽(출력) 핀에 코드가 값을 안 넣어도 같은 류의 에러가 난다.

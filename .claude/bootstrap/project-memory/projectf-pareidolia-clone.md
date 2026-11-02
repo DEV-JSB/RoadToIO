@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: f45121fa-5c36-4f97-973e-e95c6e767d32
-  modified: 2026-10-30T15:52:33.527Z
+  modified: 2026-11-02T13:05:27.867Z
 ---
 
 사용자는 Mining과 별개로 `E:\Unreal\RoadToIO\ProjectF` (UE 5.4, C++ 모듈 ProjectF) 에서
@@ -71,6 +71,21 @@ BP가 USER FootPos/FootVel로 NS에 넘김, 종이는 `length(FootPos - Pos)` vs
 NS: 새 스크래치 `PaperInfluence`(Particle Update 맨 위) — INPUT FootPos/FootVel은 스택에서 User에 Link, FootRadius 20(디버그 구는 15로 둠), PushStrength 0.5, LiftStrength 0.6 (10-31 개명: KickStrength·LiftRatio → 짝 맞춤), WakeSpeed 100. 속도 방향 ② FootVel+위쪽(|FootVel| 비례), lerp로 "바꾸기", PARTICLES Touched 출력. 떠올라 3단계 torque로 잘 뒤집힘.
 배운 함정: PIE 중 Details 패널은 실시간 갱신 안 됨(다시 선택하면 갱신). Rider 2026.2가 번들 MSBuild로 v180을 찾음 → VS2022 MSBuild로 지정.
 작업자는 PaperInfluence HLSL을 아직 다 이해 못 함(10-31). 다음: 커밋 2개 확인 → 4-1b(3명×발2 = 6개, 모듈 6번 쌓고 USER Link 방식 유력). 4-1b 쪼개기는 작업자가 먼저.
+2026-10-31: **4-1b-1 완료(조작 캐릭터 양발).** BP_MateCharacter에 Toucher_FootL/FootR, BP_PaperField는 `Touchers` 배열(Get Components By Class) → GET[0]/[1] → USER FootPos0/FootVel0/FootPos1/FootVel1,
+NS는 PaperInfluence를 2번 쌓음(스크래치 스크립트 이름도 PaperInfluence로 개명 — 목록에서 느린 두 번 클릭). 스택 INPUT이 아직 KickStrength=1.0으로 보였음(개명 미적용?) — 확인 필요.
+함정: 와일드카드 GET을 Is Valid 출력 쪽에서 거꾸로 끌어내면 Object로 굳음(작업자가 재현 실험으로 확정), 배열로 타입 변경 후 "Can't parse default value None" 경고.
+열린 질문(작업자 제기): **종이가 캐릭터 몸을 관통** — 로드맵에 명시 없음. 작업자: 영상에선 통과 안 함. 판 휘어짐(WPO)도 로드맵에 없음 → 작업자 결정: 로드맵에 넣지 않고 **"디테일 후보"로만** 기록(CLAUDE.md §4).
+다음: 4-1b-2(3명×양발) — 작업자가 "변수·모듈을 늘린다"로 답함 → 부위까지 늘면 모듈 15개, 배열 방식(B) 재검토 시점.
+2026-11-02 영상 재분석(`C:\Users\mvat1\Videos\화면 녹화\화면 녹화 중 2026-10-11 215421.mp4`, 9.2초, 모니터를 찍은 저해상도. ffmpeg·python·node 없음 →
+scratchpad에 PowerShell HttpListener + canvas로 프레임 뽑아 브라우저 패널로 봄): 1.5초 방 전체 종이 동시 상승(바닥 하강 착시, 범위 밖), 2~4.4초 낙하.
+**공중 종이는 면이 휘어 있다** — 대부분 한 축으로 둥근 C/U자, 일부는 거의 반 접힌 V(펼친 책). 물결 이동은 해상도상 확인 불가. 바닥에 누운 종이는 평평.
+발에 걸린 종이는 모서리로 서고(6.0s, 3.8~4.1s) 서 있는 종이도 살짝 휨. 영상엔 경사면 위 종이 장면 없음(경사 눕기 버그는 우리 맵 문제).
+작업자 결정(11-02): 4-1b-2 전에 **판 휘어짐(종이다움)을 먼저** 한다. **C/U 휨만, V 접힘은 안 함**("매일 종이만 구현하겠다" — 범위 걱정, 최소판으로).
+**NS Mesh Renderer는 `SM_Paper1`을 씀**(SM_Paper 아님. Approx Size 29×21×0 — 첫 스크린샷을 20×21로 잘못 읽었음, 버텍스 35/삼각형 48 = 4×6 분할). SM_Paper1의 머티리얼 슬롯은 **`M_Paper1`**(M_Paper 아님). Two Sided는 M_Paper에서만 확인함 → M_Paper1도 확인 필요. CLAUDE.md §4 에셋 표(SM_Paper/M_Paper)는 실제와 다름.
+휨 최소판 계획: 1단계 M_Paper1 WPO(TexCoord→Mask(R, 긴 쪽 확인됨)→ConstantBiasScale(-0.5,2)→c×c→×BendTest→×BendDepth(3)→×VertexNormalWS) → 2단계 Niagara 종이마다 랜덤 휨 → Dynamic Parameter → 3단계 Landed면 0.
+작업자 질문 "이게 클라 프로그래머 일인가?" → 보통 TA 영역이라고 답함. 작업자 결정: **B = 최소판 3단계까지 완주 후 멈춤**(법선 재계산·물결 등 TA 깊이는 안 감), 그다음 4-1b-2.
+**11-02 휨 최소판 완료**: Particle Spawn에 Set `PARTICLES PaperBend`(Random Range Float -1~1), Particle Update 맨 아래 Dynamic Material Parameters Index0 Param1 = New Expression `Particles.PaperBend * (1.0 - Particles.Landed)`,
+M_Paper1은 BendTest 대신 Dynamic Parameter 첫 출력(Param1). 공중 ∪/∩ 제각각, 바닥 평평 확인. 미확인: 착지 순간 툭 펴짐이 거슬리는지. 다음: 경사면 눕기(A) 가설 → 4-1b-2. 경사면에서 안 기우는 문제도 제기(PaperAero flatN이 월드 위 고정일 것 — 가설은 작업자에게 맡김).
 화면 태그 이름(INPUT 등)으로 말할 것 — 내부 이름(Module.)으로 말했다가 지적받음. 3단계 전에 내적/외적을 그림으로 따로 설명하기로 약속함.
 
 **Why:** 다음 세션에서 같은 영상을 다시 분석하거나 바닥 하강을 "국소 함몰"로 잘못 해석하지 않기 위해.
