@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: f45121fa-5c36-4f97-973e-e95c6e767d32
-  modified: 2026-11-02T13:05:27.867Z
+  modified: 2026-11-02T14:02:45.467Z
 ---
 
 사용자는 Mining과 별개로 `E:\Unreal\RoadToIO\ProjectF` (UE 5.4, C++ 모듈 ProjectF) 에서
@@ -85,7 +85,13 @@ scratchpad에 PowerShell HttpListener + canvas로 프레임 뽑아 브라우저 
 휨 최소판 계획: 1단계 M_Paper1 WPO(TexCoord→Mask(R, 긴 쪽 확인됨)→ConstantBiasScale(-0.5,2)→c×c→×BendTest→×BendDepth(3)→×VertexNormalWS) → 2단계 Niagara 종이마다 랜덤 휨 → Dynamic Parameter → 3단계 Landed면 0.
 작업자 질문 "이게 클라 프로그래머 일인가?" → 보통 TA 영역이라고 답함. 작업자 결정: **B = 최소판 3단계까지 완주 후 멈춤**(법선 재계산·물결 등 TA 깊이는 안 감), 그다음 4-1b-2.
 **11-02 휨 최소판 완료**: Particle Spawn에 Set `PARTICLES PaperBend`(Random Range Float -1~1), Particle Update 맨 아래 Dynamic Material Parameters Index0 Param1 = New Expression `Particles.PaperBend * (1.0 - Particles.Landed)`,
-M_Paper1은 BendTest 대신 Dynamic Parameter 첫 출력(Param1). 공중 ∪/∩ 제각각, 바닥 평평 확인. 미확인: 착지 순간 툭 펴짐이 거슬리는지. 다음: 경사면 눕기(A) 가설 → 4-1b-2. 경사면에서 안 기우는 문제도 제기(PaperAero flatN이 월드 위 고정일 것 — 가설은 작업자에게 맡김).
+M_Paper1은 BendTest 대신 Dynamic Parameter 첫 출력(Param1). 공중 ∪/∩ 제각각, 바닥 평평 확인. 착지 순간 툭 펴짐 → 디테일 후보 최후순위(작업자).
+**11-02 경사면 눕기 완료**: PaperSim이 트레이스 법선 → `OutFloorN = lerp((0,0,1), FloorNrm, hitF)` → PARTICLES FloorN, Spawn Set FloorN=(0,0,1),
+PaperAero `flatN = FloorN * (step(0, dot(N,FloorN))*2-1)`. 작업자가 스스로 "중심 한 점이라 절벽에 걸친 종이는 못 처진다" 한계를 짚음 → 절벽 끝 처짐은 디테일 후보.
+작업자 가설("바닥 법선을 flatN에")은 맞았음. 연결 안 된 핀(입력 칸 보임) 규칙을 FloorNrm에서 다시 씀. 다음: 4-1b-2.
+11-02 회고: 작업자가 faceSign·M_Paper1 노드를 "이해 못 하고 따라 했다", 경사면 가설도 "자동완성"이었다며 답답해함. 진단: GameMathLab 연습 2(내적 부호로 앞뒤 판정)를 건너뜀 + faceSign이 막는 문제를 본 적 없음 + 한 줄에 4단계.
+"망가뜨려 보기"(flatN=FloorN) 실험은 실패 — 양면이 같은 색이라 뒤집혀도 결과가 같아 보임, 발차기·TiltDeg 140~160으로도 작업자는 차이를 못 봄. 다음엔 실험 전에 "무엇이 보일지"를 Claude가 먼저 검증할 것(뒷면 색 구분 등). 작업자가 faceSign 실험 후 원복했는지 확인 필요(flatN 두 줄, TiltDeg ±25).
+작업자: "Material 쪽은 아예 몰라서 기초부터 배워야 할 것 같다"(11-02) — 머티리얼 기초 학습 트랙 희망. 아직 언제·어디서(GameMathLab? 별도?) 할지는 미정. 경사면에서 안 기우는 문제도 제기(PaperAero flatN이 월드 위 고정일 것 — 가설은 작업자에게 맡김).
 화면 태그 이름(INPUT 등)으로 말할 것 — 내부 이름(Module.)으로 말했다가 지적받음. 3단계 전에 내적/외적을 그림으로 따로 설명하기로 약속함.
 
 **Why:** 다음 세션에서 같은 영상을 다시 분석하거나 바닥 하강을 "국소 함몰"로 잘못 해석하지 않기 위해.

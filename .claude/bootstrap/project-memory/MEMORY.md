@@ -6,10 +6,12 @@
 - [핀 안내: 태그+이름+자료형+왼쪽/오른쪽](pin-type-not-color.md) — PARTICLES/INPUT 태그 절대 생략 금지, 색으로 말하지 않기
 - [게임 프로젝트 커밋은 작업자만](user-commits-game-projects.md) — commit/push 금지, 메시지 초안만. study-notes는 Claude가 커밋 OK
 - [일지·그림 노트는 study-notes에, 하루 한 번 /devlog](devlog-roadtoio.md) — projectf/devlog/YYYY-MM-DD-ProjectF.md, 생성·커밋·푸시는 Claude 담당
+- [입력창 추천 답장이 Claude 힌트로 답을 채움](hints-become-autocomplete.md) — Prompt suggestions(Tab). 가설은 힌트 없이 묻고, 막히면 한 칸씩
 
 ## 프로젝트
 - [ProjectF = 파레이돌리아 모작, 종이 연출 Niagara](projectf-pareidolia-clone.md) — 범위는 종이 자체. 3단계까지 완료, 다음 4단계 몸 반응
 - [학습 노트 공개 레포 study-notes](study-notes-repo.md) — GitHub Pages, HTML 그림 노트
+
 
 ## 주의
 - [Niagara CPU HLSL은 if 안 벡터 대입 불가](niagara-cpu-vm-hlsl-branch-limit.md) — step/max/lerp로
