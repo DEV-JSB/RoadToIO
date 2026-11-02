@@ -6,6 +6,7 @@
 - [핀 안내: 태그+이름+자료형+왼쪽/오른쪽](pin-type-not-color.md) — PARTICLES/INPUT 태그 절대 생략 금지, 색으로 말하지 않기
 - [게임 프로젝트 커밋은 작업자만](user-commits-game-projects.md) — commit/push 금지, 메시지 초안만. study-notes는 Claude가 커밋 OK
 - [일지·그림 노트는 study-notes에, 하루 한 번 /devlog](devlog-roadtoio.md) — projectf/devlog/YYYY-MM-DD-ProjectF.md, 생성·커밋·푸시는 Claude 담당
+- [일지 티키타카는 개념·엔진 질문만](devlog-tikitaka-concepts-only.md) — 범위 상의·진로·감정·세션 잡담은 안 적음
 - [입력창 추천 답장이 Claude 힌트로 답을 채움](hints-become-autocomplete.md) — Prompt suggestions(Tab). 가설은 힌트 없이 묻고, 막히면 한 칸씩
 
 ## 프로젝트
