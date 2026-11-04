@@ -10,7 +10,7 @@
 - [입력창 추천 답장이 Claude 힌트로 답을 채움](hints-become-autocomplete.md) — Prompt suggestions(Tab). 가설은 힌트 없이 묻고, 막히면 한 칸씩
 
 ## 프로젝트
-- [ProjectF = 파레이돌리아 모작, 종이 연출 Niagara](projectf-pareidolia-clone.md) — 범위는 종이 자체. 3단계까지 완료, 다음 4단계 몸 반응
+- [ProjectF = 파레이돌리아 모작, 종이 연출 Niagara](projectf-pareidolia-clone.md) — 종이 연출은 4-1b-1에서 멈춤(11-04). 다음은 대화 연출(대사별 모션·눈동자), ProjectF 안에서
 - [학습 노트 공개 레포 study-notes](study-notes-repo.md) — GitHub Pages, HTML 그림 노트
 
 
